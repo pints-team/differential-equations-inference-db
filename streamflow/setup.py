@@ -9,5 +9,10 @@ setup(
     version='0.1',
     install_requires=[
         'pints',
-        ]
+        ],
+    extras_require={
+        'dev': [
+            'flake8>=3',
+            ]
+    },
 )
