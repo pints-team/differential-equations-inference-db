@@ -1,7 +1,10 @@
 """Setup script for the pystreamflow python package.
 """
 
-from setuptools import setup
+import os
+from setuptools import setup, Extension
+
+ext1 = Extension('ode', [os.path.join('pystreamflow', 'ode.c')])
 
 setup(
     name='pystreamflow',
@@ -16,4 +19,5 @@ setup(
             'flake8>=3',
             ]
     },
+    ext_modules=[ext1],
 )
