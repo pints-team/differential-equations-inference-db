@@ -11,3 +11,5 @@ mkdir build-sundials-5.1.0
 cd build-sundials-5.1.0/
 cmake -DLAPACK_ENABLE=ON -DSUNDIALS_INDEX_SIZE=64 -DCMAKE_INSTALL_PREFIX=/usr/local/ ../sundials-5.1.0/
 make install
+export SUNDIALS_INST=/usr/local/
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
