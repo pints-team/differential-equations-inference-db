@@ -32,10 +32,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: x64
 
-      # - name: Install dependencies
-      #   run: |
-      #     sudo ./.github/workflows/install_dependencies.sh
-
       - name: Install dependencies
         run: |
           sudo apt-get -qq update;
@@ -48,14 +44,6 @@ jobs:
           make install
           export SUNDIALS_INST=$GITHUB_WORKSPACE
           export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/lib:$LD_LIBRARY_PATH
-
-      - name: print
-        run: |
-          export SUNDIALS_INST=$GITHUB_WORKSPACE
-          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/lib:$LD_LIBRARY_PATH
-          echo $GITHUB_WORKSPACE
-          echo $LD_LIBRARY_PATH
-          echo $SUNDIALS_INST
 
       - name: Install models
         run: |
