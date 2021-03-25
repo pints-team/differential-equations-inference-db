@@ -9,7 +9,6 @@ import unittest.mock
 import pystreamflow
 
 
-
 class TestFlux(unittest.TestCase):
 
     def test_flux(self):
