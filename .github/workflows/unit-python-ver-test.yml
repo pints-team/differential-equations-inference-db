@@ -36,6 +36,12 @@ jobs:
         run: |
           sudo ./.github/workflows/install_dependencies.sh
 
+      - name: print
+        run: |
+          echo $GITHUB_WORKSPACE
+          echo $LD_LIBRARY_PATH
+          echo $SUNDIALS_INST
+
       - name: Install models
         run: |
           python --version
