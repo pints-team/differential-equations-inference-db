@@ -51,12 +51,16 @@ jobs:
 
       - name: print
         run: |
+          export SUNDIALS_INST=$GITHUB_WORKSPACE
+          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/lib:$LD_LIBRARY_PATH
           echo $GITHUB_WORKSPACE
           echo $LD_LIBRARY_PATH
           echo $SUNDIALS_INST
 
       - name: Install models
         run: |
+          export SUNDIALS_INST=$GITHUB_WORKSPACE
+          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/lib:$LD_LIBRARY_PATH
           python --version
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -e ./streamflow/
@@ -64,4 +68,6 @@ jobs:
 
       - name: run unit tests
         run: |
+          export SUNDIALS_INST=$GITHUB_WORKSPACE
+          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/lib:$LD_LIBRARY_PATH
           python run-tests.py --unit
