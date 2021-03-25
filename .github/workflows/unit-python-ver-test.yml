@@ -38,6 +38,8 @@ jobs:
 
       - name: print
         run: |
+          export SUNDIALS_INST=/usr/local
+          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
           echo $GITHUB_WORKSPACE
           echo $LD_LIBRARY_PATH
           echo $SUNDIALS_INST
