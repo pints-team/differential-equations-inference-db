@@ -32,14 +32,25 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: x64
 
+      # - name: Install dependencies
+      #   run: |
+      #     sudo ./.github/workflows/install_dependencies.sh
+
       - name: Install dependencies
         run: |
-          sudo ./.github/workflows/install_dependencies.sh
+          apt-get -qq update;
+          apt-get install -y libopenblas-dev liblapack-dev
+          wget https://github.com/LLNL/sundials/releases/download/v5.1.0/sundials-5.1.0.tar.gz
+          tar xzf sundials-5.1.0.tar.gz
+          mkdir build-sundials-5.1.0
+          cd build-sundials-5.1.0/
+          cmake -DLAPACK_ENABLE=ON -DSUNDIALS_INDEX_SIZE=64 -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE ../sundials-5.1.0/
+          make install
+          export SUNDIALS_INST=$GITHUB_WORKSPACE
+          export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/lib:$LD_LIBRARY_PATH
 
       - name: print
         run: |
-          export SUNDIALS_INST=/usr/local
-          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
           echo $GITHUB_WORKSPACE
           echo $LD_LIBRARY_PATH
           echo $SUNDIALS_INST
