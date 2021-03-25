@@ -8,6 +8,7 @@ setup(
     description='Hydrology models in Python and PINTS',
     version='0.1',
     install_requires=[
+        'pandas',
         'pints',
         ],
     extras_require={
