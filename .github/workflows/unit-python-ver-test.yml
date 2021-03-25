@@ -41,7 +41,7 @@ jobs:
           python --version
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install -e ./streamflow/
-          python -m pip install -e ./streamflow/[dev]
+          python -m pip install -e ./streamflow/[dev,cvode]
 
       - name: run unit tests
         run: |
