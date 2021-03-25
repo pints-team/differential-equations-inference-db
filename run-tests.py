@@ -12,7 +12,7 @@ def run_unit_tests():
     """
     Runs unit tests (without subprocesses).
     """
-    model_dirs = ['streamflow/pystreamflow']
+    model_dirs = [os.path.join('streamflow', 'pystreamflow')]
 
     for dir in model_dirs:
         tests = os.path.join(dir, 'tests')
