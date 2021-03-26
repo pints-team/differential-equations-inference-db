@@ -1,4 +1,4 @@
-# pints-models
+# bayesian-differential-equations-db
 
 The purpose of pints-models is to present Python implementations of scientific time series models from various disciplines.
 
