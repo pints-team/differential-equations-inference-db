@@ -20,6 +20,7 @@ setup(
     extras_require={
         'dev': [
             'flake8>=3',
+            'sphinx',
             ],
         'cvode': [
             'scikits.odes',

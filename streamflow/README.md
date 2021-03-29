@@ -22,7 +22,7 @@ cmake -DLAPACK_ENABLE=ON -DSUNDIALS_INDEX_SIZE=64 ../sundials-5.1.0/
 make install
 ```
 
-scikits.odes is pip installable, but it is often necessary to refer to its [installation documentation](https://scikits-odes.readthedocs.io/en/latest/installation.html), which contains troubleshooting information.
+scikits.odes is pip installable, and an attempt will be made to install it when `pip install .[cvode]` is executed. However, system-specific troubleshooting is often required; see the scikit.odes [installation documentation](https://scikits-odes.readthedocs.io/en/latest/installation.html) for details.
 
 If you have conda, an alternative is to use conda forge:
 

@@ -21,45 +21,45 @@ class RiverModel(pints.ForwardModel):
 
     The model has four latent state variables:
 
-        S_i = interception storage
-        S_u = unsaturated storage
-        S_s = slow reservoir
-        S_f = fast reservoir
+        * S_i = interception storage
+        * S_u = unsaturated storage
+        * S_s = slow reservoir
+        * S_f = fast reservoir
 
     and one observed variable:
 
-        z = water flowed out of the river
+        * z = water flowed out of the river
 
     (In fact, it is dz/dt, or the streamflow, that is observed.)
 
     The model is characterized by the following unknown parameters:
 
-        I_max = maximum interception
-        S_u,max = unsaturated storage capacity
-        Q_s,max = maximum percolation
-        alpha_e = evaporation flux shape
-        alpha_f = runoff flux shape
-        K_s = slow reservoir time constant
-        K_f = fast reservoir time constant
+        * I_max = maximum interception
+        * S_u,max = unsaturated storage capacity
+        * Q_s,max = maximum percolation
+        * alpha_e = evaporation flux shape
+        * alpha_f = runoff flux shape
+        * K_s = slow reservoir time constant
+        * K_f = fast reservoir time constant
 
     as well as the following two parameters whose values are here assumed fixed
     and known:
 
-        alpha_s = 0 (percolation flux shape)
-        alpha_i = 50 (interception flux shape)
+        * alpha_s = 0 (percolation flux shape)
+        * alpha_i = 50 (interception flux shape)
 
     Appearing multiple times in the model is the flux function f, given by:
 
-        f(S, a) = (1 - exp(-a * S)) / (1 - exp(-a))
+        * f(S, a) = (1 - exp(-a * S)) / (1 - exp(-a))
 
     The behavior of all the variables is governed by a system of differential
     equations, namely
 
-        dS_i/dt = Precip(t) - InterceptEvap(t) - EffectPrecip(t)
-        dS_u/dt = EffectPrecip(t) - UnsatEvap(t) - Percolation(t) - Runoff(t)
-        dS_s/dt = Percolation(t) - SlowStream(t)
-        dS_f/dt = Runoff(t) - FastStream(t)
-        dz/dt = SlowStream(t) + FastStream(t)
+        * dS_i/dt = Precip(t) - InterceptEvap(t) - EffectPrecip(t)
+        * dS_u/dt = EffectPrecip(t) - UnsatEvap(t) - Percolation(t) - Runoff(t)
+        * dS_s/dt = Percolation(t) - SlowStream(t)
+        * dS_f/dt = Runoff(t) - FastStream(t)
+        * dz/dt = SlowStream(t) + FastStream(t)
 
     Each term is defined below.
 
@@ -68,27 +68,34 @@ class RiverModel(pints.ForwardModel):
     Evap = measured or theoretical evaporation (provided as input to the model)
 
     InterceptEvap = evaporation from the interception component
-        InterceptEvap(t) = Evap(t) * f(S_i / I_max, alpha_i)
+
+        * InterceptEvap(t) = Evap(t) * f(S_i / I_max, alpha_i)
 
     EffectPrecip = effective precipitation that gets sent to unsaturated
     storage
-        EffectPrecip(t) = Precip(t) * f(S_i / I_max, -alpha_i)
+
+        * EffectPrecip(t) = Precip(t) * f(S_i / I_max, -alpha_i)
 
     UnsatEvap = evaporation from unsaturated storage
-        UnsatEvap(t) = max(0, Evap(t) - InterceptEvap(t))
+
+        * UnsatEvap(t) = max(0, Evap(t) - InterceptEvap(t))
                        * f(S_u / S_u,max, alpha_e)
 
     Percolation = trickling of water through the ground
-        Percolation(t) = Q_s,max * f(S_u / S_u,max, alpha_s)
+
+        * Percolation(t) = Q_s,max * f(S_u / S_u,max, alpha_s)
 
     Runoff = flow of water on the surface
-        Runoff(t) = EffectPrecip(t) * f(S_u / S_u,max, alpha_f)
+
+        * Runoff(t) = EffectPrecip(t) * f(S_u / S_u,max, alpha_f)
 
     SlowStream = The slow component of the river flow
-        SlowStream(t) = S_s / K_s
+
+        * SlowStream(t) = S_s / K_s
 
     FastStream = The fast component of the river flow
-        FastStream(t) = S_f / K_f
+
+        * FastStream(t) = S_f / K_f
 
     Models of this type are described in [1]_ and [2]_.
     See also the following MATLAB code
@@ -174,6 +181,9 @@ class RiverModel(pints.ForwardModel):
         self.rainfall_data = rainfall
         self.evap_data = evaporation
 
+        self.rainfall_data_dict = dict(zip(times, rainfall))
+        self.evap_data_dict = dict(zip(times, evaporation))
+
     def simulate(self, parameters, times):
         """Run a forward simulation.
 
@@ -208,9 +218,8 @@ class RiverModel(pints.ForwardModel):
         if self.solver == 'scipy':
             # Define derivative function for solver
             def f(t, y):
-                index = math.floor(t - first_model_data_time) + 1
-                precip = self.rainfall_data[index]
-                evap = self.evap_data[index]
+                precip = self.rainfall_data_dict.get(math.ceil(t), 0)
+                evap = self.evap_data_dict.get(math.ceil(t), 0)
                 return pystreamflow.ode.ode_rhs(
                             t,
                             *y[:-1],
@@ -238,9 +247,8 @@ class RiverModel(pints.ForwardModel):
         elif self.solver == 'scikit':
             # Define derivative function for solver
             def f(t, y, ydot):
-                index = math.floor(t - first_model_data_time) + 1
-                precip = self.rainfall_data[index]
-                evap = self.evap_data[index]
+                precip = self.rainfall_data_dict.get(math.ceil(t), 0)
+                evap = self.evap_data_dict.get(math.ceil(t), 0)
                 d = pystreamflow.ode.ode_rhs(
                     t,
                     *y[:-1],
@@ -270,5 +278,9 @@ class RiverModel(pints.ForwardModel):
 
         # Take the difference, which corresponds to the measurements (flow)
         y = np.diff(y)
+
+        if len(y) != len(times):
+            # At bad parameter values, CVODE can fail and return a short y
+            return [np.nan] * len(times)
 
         return y

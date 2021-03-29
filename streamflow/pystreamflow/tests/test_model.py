@@ -92,6 +92,12 @@ class TestRiverModel(unittest.TestCase):
         self.assertEqual(m.rainfall_data, self.precip)
         self.assertEqual(m.evap_data, self.evap)
 
+        self.assertEqual(m.rainfall_data_dict[1], 0)
+        self.assertEqual(m.evap_data_dict[1], 3)
+
+        self.assertEqual(m.rainfall_data_dict[7], 1)
+        self.assertEqual(m.evap_data_dict[7], 5.5)
+
     def test_simulate(self):
         # Test running simulate
         params = [2.5, 100, 7, 1, -0.5, 60, 3.25]
