@@ -34,4 +34,4 @@ conda install -c conda-forge scikits.odes
 
 Once installed, the streamflow model can be accessed using the `pystreamflow.RiverModel` class and the data can be accessed using the `pystreamflow.load_data` function. The raw data files are available [here](pystreamflow/data/), and the model code is [here](pystreamflow/model.py).
 
-The [notebook](examples/data_and_inference.ipynb) in the examples directory contains code for loading the data and running inference with MCMC.
+The [notebook](../examples/data_and_inference.ipynb) in the examples directory contains code for loading the data and running inference with MCMC.
