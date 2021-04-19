@@ -10,6 +10,9 @@ While the [`pints.toy`](https://pints.readthedocs.io/en/latest/toy/index.html) m
 | ----- | --------- | -------- |
 | [Rainfall-runoff river discharge data, French Broad River at Asheville, NC.](streamflow/) | [[1]](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2009WR008933) | Importance of numerical accuracy, complex noise process, potential model misspecification |
 
+## Examples
+
+The [examples](examples/) directory contains example notebooks for each of the models.
 
 ## References
 
