@@ -9,3 +9,8 @@ While the [`pints.toy`](https://pints.readthedocs.io/en/latest/toy/index.html) m
 | Model | Reference | Features |
 | ----- | --------- | -------- |
 | [Rainfall-runoff river discharge data, French Broad River at Asheville, NC.](streamflow/) | [[1]](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2009WR008933) | Complex noise noise process, potential model misspecification, importance of numerical accuracy |
+
+
+## References
+
+[1] Schoups, G., & Vrugt, J. A. (2010). A formal likelihood function for parameter and predictive inference of hydrologic models with correlated, heteroscedastic, and non‐Gaussian errors. _Water Resources Research_, 46(10).
