@@ -19,20 +19,45 @@ except ImportError:
 class RiverModel(pints.ForwardModel):
     """Rainfall runoff model of river streamflow.
 
-    The model has four latent state variables:
+    The model divides the movement of water through the river basin into the
+    following spatially-grouped components representing different hydrological
+    processes:
+
+        * Interception, representing vegetation. Rainfall lands on vegetative
+          surfaces such as leaves and stems, at which point it may either enter
+          the ground or evaporate back into the air.
+        * Unsaturated zone, representing the soil above the water table.
+
+    From the unsaturated zone, water can enter the river flow via one of two
+    processes:
+
+        * A slow reservoir, representing percolation
+        * A fast reservoir, representing surface runoff
+
+    The model has four latent state variables, each giving the level of water
+    in the components described above, which varies over time:
 
         * S_i = interception storage
         * S_u = unsaturated storage
         * S_s = slow reservoir
         * S_f = fast reservoir
 
-    and one observed variable:
+    and one observed variable (in fact, it is dz/dt, or the streamflow, that is
+    observed):
 
         * z = water flowed out of the river
 
-    (In fact, it is dz/dt, or the streamflow, that is observed.)
+    The behavior of all the variables is governed by a system of differential
+    equations, namely
 
-    The model is characterized by the following unknown parameters:
+        * dS_i/dt = Precip(t) - InterceptEvap(t) - EffectPrecip(t)
+        * dS_u/dt = EffectPrecip(t) - UnsatEvap(t) - Percolation(t) - Runoff(t)
+        * dS_s/dt = Percolation(t) - SlowStream(t)
+        * dS_f/dt = Runoff(t) - FastStream(t)
+        * dz/dt = SlowStream(t) + FastStream(t)
+
+    Each term is defined below. The model is characterized by the following
+    unknown parameters:
 
         * I_max = maximum interception
         * S_u,max = unsaturated storage capacity
@@ -51,17 +76,6 @@ class RiverModel(pints.ForwardModel):
     Appearing multiple times in the model is the flux function f, given by:
 
         * f(S, a) = (1 - exp(-a * S)) / (1 - exp(-a))
-
-    The behavior of all the variables is governed by a system of differential
-    equations, namely
-
-        * dS_i/dt = Precip(t) - InterceptEvap(t) - EffectPrecip(t)
-        * dS_u/dt = EffectPrecip(t) - UnsatEvap(t) - Percolation(t) - Runoff(t)
-        * dS_s/dt = Percolation(t) - SlowStream(t)
-        * dS_f/dt = Runoff(t) - FastStream(t)
-        * dz/dt = SlowStream(t) + FastStream(t)
-
-    Each term is defined below.
 
     Precip = measured precipitation (provided as input to the model)
 
@@ -97,7 +111,9 @@ class RiverModel(pints.ForwardModel):
 
         * FastStream(t) = S_f / K_f
 
-    Models of this type are described in [1]_ and [2]_.
+    This is the model that was studied in [1]_. See also [2]_, which contains
+    further details for models of this type.
+
     See also the following MATLAB code
     https://github.com/Zaijab/DREAM/tree/master/examples/example_14
 
